@@ -25,6 +25,7 @@ export function HomePage() {
   });
 
   const activeProjects = projects?.filter((p) => p.status === 'ACTIVE') ?? [];
+  const fundingProjects = projects?.filter((p) => p.status === 'FUNDING') ?? [];
   const recentAlbums = albums?.slice(0, 10) ?? [];
 
   return (
@@ -125,7 +126,58 @@ export function HomePage() {
             ))}
           </div>
         )}
+
+
+
       </motion.section>
+
+
+      <motion.section
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25, duration: 0.4 }}
+      >
+        <div className="flex items-center gap-2 mb-5">
+          <TrendingUp className="w-5 h-5 text-accent-purple" />
+          <h2 className="text-xl font-bold text-text-primary">Проекты в разработке</h2>
+          {fundingProjects.length > 0 && (
+            <span className="ml-auto text-sm text-text-muted">
+              {fundingProjects.length} проектов
+            </span>
+          )}
+        </div>
+
+        {projectsLoading ? (
+          <div className="flex justify-center py-10">
+            <Spinner size="lg" />
+          </div>
+        ) : fundingProjects.length === 0 ? (
+          <div className="text-center py-16 text-text-muted">
+            <TrendingUp className="w-12 h-12 mx-auto mb-3 opacity-30" />
+            <p>Проектов в разработке пока нет</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            {fundingProjects.map((project, i) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.06 }}
+              >
+                <ProjectCard project={project} />
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+
+      </motion.section>
+
+
+
+
+
 
       {/* All Albums grid */}
       {!albumsLoading && (albums?.length ?? 0) > 10 && (

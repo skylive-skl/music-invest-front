@@ -1,6 +1,6 @@
 import type { User } from './user.types';
 
-export type ProjectStatus = 'ACTIVE' | 'FUNDED' | 'EXPIRED' | 'CANCELLED';
+export type ProjectStatus = 'DRAFT' | 'FUNDING' | 'ACTIVE' | 'FAILED' | 'COMPLETED';
 
 export interface MediaAttachment {
   id: string;
