@@ -10,6 +10,7 @@ import { InvestorDashboardPage } from './pages/InvestorDashboardPage';
 import { CollectionPage } from './pages/CollectionPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { MyProjectsPage } from './pages/MyProjectsPage';
 import { useAuthStore } from './store/auth.store';
 
 const queryClient = new QueryClient({
@@ -49,6 +50,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <InvestorDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-projects"
+              element={
+                <ProtectedRoute>
+                  <MyProjectsPage />
                 </ProtectedRoute>
               }
             />

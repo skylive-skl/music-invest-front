@@ -7,6 +7,13 @@ export const projectsApi = {
     return data;
   },
 
+  getByArtist: async (artistId: string): Promise<Project[]> => {
+    const { data } = await apiClient.get<Project[]>('/projects', {
+      params: { artistId },
+    });
+    return data;
+  },
+
   getById: async (id: string): Promise<Project> => {
     const { data } = await apiClient.get<Project>(`/projects/${id}`);
     return data;

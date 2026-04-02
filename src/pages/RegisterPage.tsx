@@ -25,12 +25,12 @@ export function RegisterPage() {
   const { mutate, isPending } = useMutation({
     mutationFn: () => authApi.register({ email, password, role }),
     onSuccess: async (data) => {
-      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('access_token', data.accessToken);
       try {
         const user = await usersApi.getMe();
-        login(data.access_token, user);
+        login(data.accessToken, user);
       } catch {
-        login(data.access_token, { id: '', email, role, balance: 0, createdAt: '', updatedAt: '' });
+        login(data.accessToken, { id: '', email, role, balance: 0, createdAt: '', updatedAt: '' });
       }
       navigate('/');
     },

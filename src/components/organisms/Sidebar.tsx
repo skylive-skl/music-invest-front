@@ -9,6 +9,7 @@ import {
   User,
   Music2,
   Wallet,
+  Clapperboard,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/auth.store';
 import { Avatar } from '../atoms/Avatar';
@@ -19,6 +20,11 @@ const navItems = [
   { to: '/search', icon: Search, label: 'Поиск' },
   { to: '/collection', icon: Heart, label: 'Моя коллекция' },
   { to: '/investments', icon: TrendingUp, label: 'Инвестиции' },
+];
+
+// Only for ARTIST and ADMIN roles
+const artistNavItems = [
+  { to: '/my-projects', icon: Clapperboard, label: 'Мои проекты' },
 ];
 
 export function Sidebar() {
@@ -66,6 +72,38 @@ export function Sidebar() {
             )}
           </NavLink>
         ))}
+
+        {/* Artist-only section */}
+        {isAuthenticated && user && (user.role === 'ARTIST' || user.role === 'ADMIN') && (
+          <>
+            <div className="pt-4 pb-1">
+              <p className="px-3 text-xs font-semibold uppercase tracking-widest text-text-muted">
+                Для артиста
+              </p>
+            </div>
+            {artistNavItems.map(({ to, icon: Icon, label }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+                    isActive
+                      ? 'bg-accent-purple/15 text-accent-purple-light border border-accent-purple/20'
+                      : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+                  )
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <Icon className={cn('w-4.5 h-4.5', isActive ? 'text-accent-purple' : '')} size={18} />
+                    {label}
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </>
+        )}
 
         {/* Divider */}
         <div className="pt-4 pb-2">
