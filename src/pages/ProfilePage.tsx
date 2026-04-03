@@ -63,7 +63,11 @@ export function ProfilePage() {
 
       {/* User card */}
       <div className="card p-6 flex flex-col items-center text-center mb-6">
-        <Avatar name={user.email} size="lg" className="w-20 h-20 text-2xl mb-4" />
+        <Avatar
+          name={user.email}
+          size="lg"
+          className="w-20 h-20 text-2xl mb-4"
+        />
         <h2 className="text-xl font-bold text-text-primary">
           {user.email.split("@")[0]}
         </h2>

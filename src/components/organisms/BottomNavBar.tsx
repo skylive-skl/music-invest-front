@@ -1,5 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { Home, Search, Heart, TrendingUp, Clapperboard, User } from "lucide-react";
+import {
+  Home,
+  Search,
+  Heart,
+  TrendingUp,
+  Clapperboard,
+  User,
+} from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
 import { cn } from "../../lib/utils";
 

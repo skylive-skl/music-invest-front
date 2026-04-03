@@ -1,18 +1,18 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MainLayout } from './layouts/MainLayout';
-import { HomePage } from './pages/HomePage';
-import { SearchPage } from './pages/SearchPage';
-import { AlbumPage } from './pages/AlbumPage';
-import { ProjectPage } from './pages/ProjectPage';
-import { ArtistPage } from './pages/ArtistPage';
-import { InvestorDashboardPage } from './pages/InvestorDashboardPage';
-import { CollectionPage } from './pages/CollectionPage';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { MyProjectsPage } from './pages/MyProjectsPage';
-import { ProfilePage } from './pages/ProfilePage';
-import { useAuthStore } from './store/auth.store';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MainLayout } from "./layouts/MainLayout";
+import { HomePage } from "./pages/HomePage";
+import { SearchPage } from "./pages/SearchPage";
+import { AlbumPage } from "./pages/AlbumPage";
+import { ProjectPage } from "./pages/ProjectPage";
+import { ArtistPage } from "./pages/ArtistPage";
+import { InvestorDashboardPage } from "./pages/InvestorDashboardPage";
+import { CollectionPage } from "./pages/CollectionPage";
+import { LoginPage } from "./pages/LoginPage";
+import { RegisterPage } from "./pages/RegisterPage";
+import { MyProjectsPage } from "./pages/MyProjectsPage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { useAuthStore } from "./store/auth.store";
 
 const queryClient = new QueryClient({
   defaultOptions: {
