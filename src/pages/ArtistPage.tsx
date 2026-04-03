@@ -1,30 +1,30 @@
-import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Music, Disc3, ArrowLeft } from 'lucide-react';
-import { usersApi } from '../lib/api/users.api';
-import { albumsApi } from '../lib/api/albums.api';
-import { projectsApi } from '../lib/api/projects.api';
-import { AlbumCard } from '../components/molecules/AlbumCard';
-import { ProjectCard } from '../components/molecules/ProjectCard';
-import { Avatar } from '../components/atoms/Avatar';
-import { Spinner } from '../components/atoms/Spinner';
+import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Music, Disc3, ArrowLeft } from "lucide-react";
+import { usersApi } from "../lib/api/users.api";
+import { albumsApi } from "../lib/api/albums.api";
+import { projectsApi } from "../lib/api/projects.api";
+import { AlbumCard } from "../components/molecules/AlbumCard";
+import { ProjectCard } from "../components/molecules/ProjectCard";
+import { Avatar } from "../components/atoms/Avatar";
+import { Spinner } from "../components/atoms/Spinner";
 
 export function ArtistPage() {
   const { id } = useParams<{ id: string }>();
 
   const { data: users, isLoading: usersLoading } = useQuery({
-    queryKey: ['users'],
+    queryKey: ["users"],
     queryFn: usersApi.getAll,
   });
 
   const { data: albums, isLoading: albumsLoading } = useQuery({
-    queryKey: ['albums'],
+    queryKey: ["albums"],
     queryFn: albumsApi.getAll,
   });
 
   const { data: projects, isLoading: projectsLoading } = useQuery({
-    queryKey: ['projects'],
+    queryKey: ["projects"],
     queryFn: projectsApi.getAll,
   });
 
@@ -46,17 +46,19 @@ export function ArtistPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-text-muted">
         <p className="text-xl font-semibold">Артист не найден</p>
-        <Link to="/" className="text-accent-purple hover:underline">На главную</Link>
+        <Link to="/" className="text-accent-purple hover:underline">
+          На главную
+        </Link>
       </div>
     );
   }
 
-  const artistName = artist.email.split('@')[0];
+  const artistName = artist.email.split("@")[0];
 
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <div className="relative h-56 overflow-hidden">
+      <div className="relative h-36 md:h-56 overflow-hidden">
         <div
           className="w-full h-full"
           style={{
@@ -74,7 +76,7 @@ export function ArtistPage() {
         </Link>
       </div>
 
-      <div className="px-8 -mt-16 relative pb-12 space-y-10">
+      <div className="px-4 md:px-8 -mt-10 md:-mt-16 relative pb-8 md:pb-12 space-y-8 md:space-y-10">
         {/* Artist profile */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -88,7 +90,9 @@ export function ArtistPage() {
             <p className="text-xs text-text-muted uppercase tracking-widest mb-1 capitalize">
               {artist.role.toLowerCase()}
             </p>
-            <h1 className="text-3xl font-extrabold text-text-primary mb-1">{artistName}</h1>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-text-primary mb-1">
+              {artistName}
+            </h1>
             <p className="text-sm text-text-secondary">{artist.email}</p>
             <div className="flex gap-4 mt-2 text-sm text-text-muted">
               <span>{artistAlbums.length} альбомов</span>
@@ -117,7 +121,9 @@ export function ArtistPage() {
           <section>
             <div className="flex items-center gap-2 mb-4">
               <Music className="w-4 h-4 text-accent-purple" />
-              <h2 className="text-lg font-bold text-text-primary">Краудфандинг-проекты</h2>
+              <h2 className="text-lg font-bold text-text-primary">
+                Краудфандинг-проекты
+              </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {artistProjects.map((project) => (

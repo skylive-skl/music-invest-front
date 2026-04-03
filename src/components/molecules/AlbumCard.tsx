@@ -1,30 +1,34 @@
-import { motion } from 'framer-motion';
-import { Play, Music } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import type { Album } from '../../types/album.types';
-import { stringToGradient, cn } from '../../lib/utils';
+import { motion } from "framer-motion";
+import { Play, Music } from "lucide-react";
+import { Link } from "react-router-dom";
+import type { Album } from "../../types/album.types";
+import { stringToGradient, cn } from "../../lib/utils";
 
 interface AlbumCardProps {
   album: Album;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
 const sizeClasses = {
-  sm: 'w-36',
-  md: 'w-44',
-  lg: 'w-52',
+  sm: "w-36 min-w-[9rem]",
+  md: "w-40 min-w-[10rem]",
+  lg: "w-48 min-w-[12rem]",
 };
 
-export function AlbumCard({ album, className, size = 'md' }: AlbumCardProps) {
-  const artistName = album.artist?.email?.split('@')[0] ?? 'Artist';
+export function AlbumCard({ album, className, size = "md" }: AlbumCardProps) {
+  const artistName = album.artist?.email?.split("@")[0] ?? "Artist";
 
   return (
     <Link to={`/albums/${album.id}`}>
       <motion.div
-        className={cn('group cursor-pointer flex-shrink-0', sizeClasses[size], className)}
+        className={cn(
+          "group cursor-pointer flex-shrink-0",
+          sizeClasses[size],
+          className,
+        )}
         whileHover={{ scale: 1.03 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
       >
         {/* Cover */}
         <div className="relative aspect-square rounded-2xl overflow-hidden mb-3 shadow-card">

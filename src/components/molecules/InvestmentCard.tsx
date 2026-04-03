@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion';
-import { TrendingUp, Calendar, Percent } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import type { Investment } from '../../types/investment.types';
-import { FundingProgress } from '../atoms/FundingProgress';
-import { formatCurrency, formatDate, stringToGradient } from '../../lib/utils';
+import { motion } from "framer-motion";
+import { Calendar, Percent } from "lucide-react";
+import { Link } from "react-router-dom";
+import type { Investment } from "../../types/investment.types";
+import { FundingProgress } from "../atoms/FundingProgress";
+import { formatCurrency, formatDate, stringToGradient } from "../../lib/utils";
 
 interface InvestmentCardProps {
   investment: Investment;
@@ -12,11 +12,13 @@ interface InvestmentCardProps {
 
 export function InvestmentCard({ investment, index = 0 }: InvestmentCardProps) {
   const project = investment.project;
-  const totalPayout = investment.payouts?.reduce((acc, p) => acc + p.amount, 0) ?? 0;
-  const roi = investment.amount > 0
-    ? ((totalPayout / investment.amount) * 100).toFixed(1)
-    : '0';
-  const projectName = project?.title ?? 'Проект';
+  const totalPayout =
+    investment.payouts?.reduce((acc, p) => acc + p.amount, 0) ?? 0;
+  const roi =
+    investment.amount > 0
+      ? ((totalPayout / investment.amount) * 100).toFixed(1)
+      : "0";
+  const projectName = project?.title ?? "Проект";
 
   return (
     <motion.div
@@ -28,9 +30,16 @@ export function InvestmentCard({ investment, index = 0 }: InvestmentCardProps) {
       {/* Header with gradient */}
       <div className="relative h-24 overflow-hidden">
         {project?.coverImageUrl ? (
-          <img src={project.coverImageUrl} alt={projectName} className="w-full h-full object-cover" />
+          <img
+            src={project.coverImageUrl}
+            alt={projectName}
+            className="w-full h-full object-cover"
+          />
         ) : (
-          <div className="w-full h-full" style={{ background: stringToGradient(projectName) }} />
+          <div
+            className="w-full h-full"
+            style={{ background: stringToGradient(projectName) }}
+          />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-bg-card to-transparent" />
       </div>
@@ -43,7 +52,7 @@ export function InvestmentCard({ investment, index = 0 }: InvestmentCardProps) {
         </Link>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-3 gap-2 mb-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
           <div className="text-center p-2 bg-bg-elevated rounded-xl">
             <p className="text-xs text-text-muted">Вложено</p>
             <p className="text-sm font-bold text-text-primary mt-0.5">
@@ -58,7 +67,9 @@ export function InvestmentCard({ investment, index = 0 }: InvestmentCardProps) {
           </div>
           <div className="text-center p-2 bg-bg-elevated rounded-xl">
             <p className="text-xs text-text-muted">ROI</p>
-            <p className={`text-sm font-bold mt-0.5 ${totalPayout >= investment.amount ? 'text-success' : 'text-accent-cyan'}`}>
+            <p
+              className={`text-sm font-bold mt-0.5 ${totalPayout >= investment.amount ? "text-success" : "text-accent-cyan"}`}
+            >
               {roi}%
             </p>
           </div>
@@ -68,7 +79,12 @@ export function InvestmentCard({ investment, index = 0 }: InvestmentCardProps) {
         <div className="flex items-center justify-between text-xs text-text-muted">
           <div className="flex items-center gap-1">
             <Percent className="w-3 h-3" />
-            <span>Доля: <span className="text-accent-purple">{investment.sharePercent?.toFixed(2)}%</span></span>
+            <span>
+              Доля:{" "}
+              <span className="text-accent-purple">
+                {investment.sharePercent?.toFixed(2)}%
+              </span>
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <Calendar className="w-3 h-3" />

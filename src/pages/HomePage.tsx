@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
-import { Sparkles, TrendingUp, Disc3 } from 'lucide-react';
-import { albumsApi } from '../lib/api/albums.api';
-import { projectsApi } from '../lib/api/projects.api';
-import { AlbumCard } from '../components/molecules/AlbumCard';
-import { ProjectCard } from '../components/molecules/ProjectCard';
-import { Spinner } from '../components/atoms/Spinner';
+import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { Sparkles, TrendingUp, Disc3 } from "lucide-react";
+import { albumsApi } from "../lib/api/albums.api";
+import { projectsApi } from "../lib/api/projects.api";
+import { AlbumCard } from "../components/molecules/AlbumCard";
+import { ProjectCard } from "../components/molecules/ProjectCard";
+import { Spinner } from "../components/atoms/Spinner";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -15,30 +15,34 @@ const fadeUp = {
 
 export function HomePage() {
   const { data: albums, isLoading: albumsLoading } = useQuery({
-    queryKey: ['albums'],
+    queryKey: ["albums"],
     queryFn: albumsApi.getAll,
   });
 
   const { data: projects, isLoading: projectsLoading } = useQuery({
-    queryKey: ['projects'],
+    queryKey: ["projects"],
     queryFn: projectsApi.getAll,
   });
 
-  const activeProjects = projects?.filter((p) => p.status === 'ACTIVE') ?? [];
-  const fundingProjects = projects?.filter((p) => p.status === 'FUNDING') ?? [];
+  const activeProjects = projects?.filter((p) => p.status === "ACTIVE") ?? [];
+  const fundingProjects = projects?.filter((p) => p.status === "FUNDING") ?? [];
   const recentAlbums = albums?.slice(0, 10) ?? [];
 
   return (
-    <div className="min-h-screen px-8 py-8 space-y-12">
+    <div className="min-h-screen px-4 py-4 md:px-8 md:py-8 space-y-10 md:space-y-12">
       {/* Hero */}
-      <motion.section {...fadeUp} className="relative overflow-hidden rounded-3xl">
+      <motion.section
+        {...fadeUp}
+        className="relative overflow-hidden rounded-3xl"
+      >
         <div
           className="absolute inset-0 opacity-30"
           style={{
-            background: 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.5), transparent)',
+            background:
+              "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.5), transparent)",
           }}
         />
-        <div className="relative px-10 py-14">
+        <div className="relative px-5 py-8 md:px-10 md:py-14">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -50,13 +54,14 @@ export function HomePage() {
               Новая платформа
             </span>
           </motion.div>
-          <h1 className="text-5xl font-extrabold leading-tight mb-4">
-            Инвестируй <span className="text-gradient">в музыку</span><br />
+          <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+            Инвестируй <span className="text-gradient">в музыку</span>
+            <br />
             будущего
           </h1>
           <p className="text-text-secondary text-lg max-w-xl leading-relaxed">
-            Поддерживай любимых артистов и получай долю от их выручки.
-            Слушай, открывай, инвестируй.
+            Поддерживай любимых артистов и получай долю от их выручки. Слушай,
+            открывай, инвестируй.
           </p>
         </div>
       </motion.section>
@@ -95,7 +100,9 @@ export function HomePage() {
       >
         <div className="flex items-center gap-2 mb-5">
           <TrendingUp className="w-5 h-5 text-accent-purple" />
-          <h2 className="text-xl font-bold text-text-primary">Открытые проекты</h2>
+          <h2 className="text-xl font-bold text-text-primary">
+            Открытые проекты
+          </h2>
           {activeProjects.length > 0 && (
             <span className="ml-auto text-sm text-text-muted">
               {activeProjects.length} проектов
@@ -126,11 +133,7 @@ export function HomePage() {
             ))}
           </div>
         )}
-
-
-
       </motion.section>
-
 
       <motion.section
         initial={{ opacity: 0, y: 16 }}
@@ -139,7 +142,9 @@ export function HomePage() {
       >
         <div className="flex items-center gap-2 mb-5">
           <TrendingUp className="w-5 h-5 text-accent-purple" />
-          <h2 className="text-xl font-bold text-text-primary">Проекты в разработке</h2>
+          <h2 className="text-xl font-bold text-text-primary">
+            Проекты в разработке
+          </h2>
           {fundingProjects.length > 0 && (
             <span className="ml-auto text-sm text-text-muted">
               {fundingProjects.length} проектов
@@ -170,14 +175,7 @@ export function HomePage() {
             ))}
           </div>
         )}
-
-
       </motion.section>
-
-
-
-
-
 
       {/* All Albums grid */}
       {!albumsLoading && (albums?.length ?? 0) > 10 && (

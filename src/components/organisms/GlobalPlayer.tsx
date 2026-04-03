@@ -1,11 +1,16 @@
-import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Play, Pause, SkipBack, SkipForward,
-  Volume2, VolumeX, Music,
-} from 'lucide-react';
-import { usePlayerStore } from '../../store/player.store';
-import { formatDuration, cn, stringToGradient } from '../../lib/utils';
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Volume2,
+  VolumeX,
+  Music,
+} from "lucide-react";
+import { usePlayerStore } from "../../store/player.store";
+import { formatDuration, cn, stringToGradient } from "../../lib/utils";
 
 export function GlobalPlayer() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -47,11 +52,11 @@ export function GlobalPlayer() {
       playNext();
     };
 
-    audio.addEventListener('timeupdate', onTimeUpdate);
-    audio.addEventListener('ended', onEnded);
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("ended", onEnded);
     return () => {
-      audio.removeEventListener('timeupdate', onTimeUpdate);
-      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("ended", onEnded);
     };
   }, [setProgress, playNext]);
 
@@ -61,8 +66,9 @@ export function GlobalPlayer() {
     seek(Math.max(0, Math.min(1, p)));
   };
 
-  const artistName = currentTrack?.artist?.email?.split('@')[0]
-    ?? (currentTrack?.albumId ? 'Artist' : '');
+  const artistName =
+    currentTrack?.artist?.email?.split("@")[0] ??
+    (currentTrack?.albumId ? "Artist" : "");
 
   return (
     <>
@@ -74,8 +80,8 @@ export function GlobalPlayer() {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-50 h-20 glass border-t border-border shadow-player"
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            className="fixed bottom-16 md:bottom-0 left-0 right-0 z-50 h-20 glass border-t border-border shadow-player"
           >
             {/* Progress bar — at the very top */}
             <div
@@ -92,11 +98,11 @@ export function GlobalPlayer() {
 
             <div className="flex items-center h-full px-4 gap-4">
               {/* Track info */}
-              <div className="flex items-center gap-3 w-64 flex-shrink-0">
+              <div className="flex items-center gap-3 min-w-0 flex-1 md:flex-none md:w-64 md:flex-shrink-0">
                 <div
                   className={cn(
-                    'w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden',
-                    isPlaying && 'shadow-glow-purple'
+                    "w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden",
+                    isPlaying && "shadow-glow-purple",
                   )}
                   style={{ background: stringToGradient(currentTrack.title) }}
                 >
@@ -114,7 +120,9 @@ export function GlobalPlayer() {
                   <p className="text-sm font-semibold text-text-primary truncate">
                     {currentTrack.title}
                   </p>
-                  <p className="text-xs text-text-secondary truncate">{artistName}</p>
+                  <p className="text-xs text-text-secondary truncate">
+                    {artistName}
+                  </p>
                 </div>
               </div>
 
@@ -134,9 +142,17 @@ export function GlobalPlayer() {
                     className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:scale-105 transition-transform shadow-glow-purple"
                   >
                     {isPlaying ? (
-                      <Pause size={18} className="text-bg-primary" fill="currentColor" />
+                      <Pause
+                        size={18}
+                        className="text-bg-primary"
+                        fill="currentColor"
+                      />
                     ) : (
-                      <Play size={18} className="text-bg-primary ml-0.5" fill="currentColor" />
+                      <Play
+                        size={18}
+                        className="text-bg-primary ml-0.5"
+                        fill="currentColor"
+                      />
                     )}
                   </motion.button>
 
@@ -157,14 +173,19 @@ export function GlobalPlayer() {
               </div>
 
               {/* Volume */}
-              <div className="flex items-center gap-2 w-40 flex-shrink-0 justify-end">
+              <div className="hidden md:flex items-center gap-2 w-40 flex-shrink-0 justify-end">
                 <button
                   onClick={toggleMute}
                   className="text-text-secondary hover:text-text-primary transition-colors"
                 >
-                  {isMuted || volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                  {isMuted || volume === 0 ? (
+                    <VolumeX size={18} />
+                  ) : (
+                    <Volume2 size={18} />
+                  )}
                 </button>
-                <div className="flex-1 relative h-1 bg-bg-elevated rounded-full cursor-pointer group"
+                <div
+                  className="flex-1 relative h-1 bg-bg-elevated rounded-full cursor-pointer group"
                   onClick={(e) => {
                     const rect = e.currentTarget.getBoundingClientRect();
                     const v = (e.clientX - rect.left) / rect.width;
@@ -177,7 +198,10 @@ export function GlobalPlayer() {
                   />
                   <div
                     className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ left: `${(isMuted ? 0 : volume) * 100}%`, transform: 'translate(-50%, -50%)' }}
+                    style={{
+                      left: `${(isMuted ? 0 : volume) * 100}%`,
+                      transform: "translate(-50%, -50%)",
+                    }}
                   />
                 </div>
               </div>

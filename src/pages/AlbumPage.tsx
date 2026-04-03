@@ -1,19 +1,23 @@
-import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Music, Calendar, Play } from 'lucide-react';
-import { albumsApi } from '../lib/api/albums.api';
-import { TrackRow } from '../components/molecules/TrackRow';
-import { Spinner } from '../components/atoms/Spinner';
-import { formatDate, stringToGradient } from '../lib/utils';
-import { usePlayerStore } from '../store/player.store';
+import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { ArrowLeft, Music, Calendar, Play } from "lucide-react";
+import { albumsApi } from "../lib/api/albums.api";
+import { TrackRow } from "../components/molecules/TrackRow";
+import { Spinner } from "../components/atoms/Spinner";
+import { formatDate, stringToGradient } from "../lib/utils";
+import { usePlayerStore } from "../store/player.store";
 
 export function AlbumPage() {
   const { id } = useParams<{ id: string }>();
   const { playTrack } = usePlayerStore();
 
-  const { data: album, isLoading, error } = useQuery({
-    queryKey: ['album', id],
+  const {
+    data: album,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["album", id],
     queryFn: () => albumsApi.getById(id!),
     enabled: !!id,
   });
@@ -31,12 +35,14 @@ export function AlbumPage() {
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-text-muted">
         <Music className="w-16 h-16 opacity-30" />
         <p className="text-xl font-semibold">Альбом не найден</p>
-        <Link to="/" className="text-accent-purple hover:underline">На главную</Link>
+        <Link to="/" className="text-accent-purple hover:underline">
+          На главную
+        </Link>
       </div>
     );
   }
 
-  const artistName = album.artist?.email?.split('@')[0] ?? 'Artist';
+  const artistName = album.artist?.email?.split("@")[0] ?? "Artist";
   const tracks = album.tracks ?? [];
   const totalDuration = tracks.reduce((acc, t) => acc + (t.duration ?? 0), 0);
   const totalMin = Math.floor(totalDuration / 60);
@@ -49,7 +55,7 @@ export function AlbumPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <div className="relative h-72 overflow-hidden">
+      <div className="relative h-44 md:h-72 overflow-hidden">
         {album.coverImageUrl ? (
           <img
             src={album.coverImageUrl}
@@ -75,16 +81,20 @@ export function AlbumPage() {
       </div>
 
       {/* Content */}
-      <div className="px-8 -mt-20 relative pb-10">
+      <div className="px-4 md:px-8 -mt-12 md:-mt-20 relative pb-8 md:pb-10">
         <div className="flex items-end gap-6 mb-8">
           {/* Cover thumb */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-36 h-36 rounded-2xl overflow-hidden shadow-card flex-shrink-0 border-4 border-bg-primary"
+            className="w-24 h-24 md:w-36 md:h-36 rounded-2xl overflow-hidden shadow-card flex-shrink-0 border-4 border-bg-primary"
           >
             {album.coverImageUrl ? (
-              <img src={album.coverImageUrl} alt={album.title} className="w-full h-full object-cover" />
+              <img
+                src={album.coverImageUrl}
+                alt={album.title}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div
                 className="w-full h-full flex items-center justify-center"
@@ -102,8 +112,12 @@ export function AlbumPage() {
             transition={{ delay: 0.1 }}
             className="flex-1 min-w-0 pb-2"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-purple mb-1">Альбом</p>
-            <h1 className="text-3xl font-extrabold text-text-primary mb-2 line-clamp-2">{album.title}</h1>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent-purple mb-1">
+              Альбом
+            </p>
+            <h1 className="text-xl md:text-3xl font-extrabold text-text-primary mb-2 line-clamp-2">
+              {album.title}
+            </h1>
             <div className="flex items-center gap-3 text-sm text-text-secondary flex-wrap">
               <Link
                 to={`/artists/${album.artistId}`}
@@ -122,7 +136,12 @@ export function AlbumPage() {
               )}
               <span>·</span>
               <span>{tracks.length} треков</span>
-              {totalMin > 0 && <><span>·</span><span>{totalMin} мин.</span></>}
+              {totalMin > 0 && (
+                <>
+                  <span>·</span>
+                  <span>{totalMin} мин.</span>
+                </>
+              )}
             </div>
           </motion.div>
         </div>

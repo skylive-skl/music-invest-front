@@ -11,6 +11,7 @@ import { CollectionPage } from './pages/CollectionPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { MyProjectsPage } from './pages/MyProjectsPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { useAuthStore } from './store/auth.store';
 
 const queryClient = new QueryClient({
@@ -61,6 +62,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

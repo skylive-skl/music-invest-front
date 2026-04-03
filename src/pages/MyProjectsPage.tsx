@@ -1,35 +1,37 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Plus, TrendingUp, Music2, Coins, Clock } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { projectsApi } from '../lib/api/projects.api';
-import { useAuthStore } from '../store/auth.store';
-import { ProjectCard } from '../components/molecules/ProjectCard';
-import { StatusBadge } from '../components/atoms/StatusBadge';
-import { FundingProgress } from '../components/atoms/FundingProgress';
-import { Spinner } from '../components/atoms/Spinner';
-import { CreateProjectModal } from '../components/organisms/CreateProjectModal';
-import { formatCurrency, calcFundingPercent } from '../lib/utils';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Plus, TrendingUp, Music2, Coins, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
+import { projectsApi } from "../lib/api/projects.api";
+import { useAuthStore } from "../store/auth.store";
+import { ProjectCard } from "../components/molecules/ProjectCard";
+import { StatusBadge } from "../components/atoms/StatusBadge";
+import { FundingProgress } from "../components/atoms/FundingProgress";
+import { Spinner } from "../components/atoms/Spinner";
+import { CreateProjectModal } from "../components/organisms/CreateProjectModal";
+import { formatCurrency, calcFundingPercent } from "../lib/utils";
 
 export function MyProjectsPage() {
   const { user } = useAuthStore();
   const [createOpen, setCreateOpen] = useState(false);
 
   const { data: projects, isLoading } = useQuery({
-    queryKey: ['my-projects', user?.id],
+    queryKey: ["my-projects", user?.id],
     queryFn: () => projectsApi.getByArtist(user!.id),
     enabled: !!user?.id,
   });
 
-  const totalFunding = projects?.reduce((acc, p) => acc + p.currentFunding, 0) ?? 0;
-  const totalGoal = projects?.reduce((acc, p) => acc + p.fundingGoal, 0) ?? 0;
-  const activeCount = projects?.filter((p) => p.status === 'ACTIVE').length ?? 0;
-  const fundedCount = projects?.filter((p) => p.status === 'FUNDED').length ?? 0;
+  const totalFunding =
+    projects?.reduce((acc, p) => acc + p.currentFunding, 0) ?? 0;
+  const activeCount =
+    projects?.filter((p) => p.status === "ACTIVE").length ?? 0;
+  const fundedCount =
+    projects?.filter((p) => p.status === "ACTIVE").length ?? 0;
 
   return (
     <>
-      <div className="min-h-screen px-8 py-8 space-y-8">
+      <div className="min-h-screen px-4 py-4 md:px-8 md:py-8 space-y-6 md:space-y-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -39,7 +41,9 @@ export function MyProjectsPage() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Music2 className="w-6 h-6 text-accent-purple" />
-              <h1 className="text-3xl font-bold text-text-primary">Мои проекты</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-text-primary">
+                Мои проекты
+              </h1>
             </div>
             <p className="text-text-secondary">
               Управляйте своими краудфандинг-кампаниями
@@ -57,28 +61,36 @@ export function MyProjectsPage() {
           >
             <div className="p-5 bg-bg-card border border-border rounded-2xl">
               <p className="text-xs text-text-muted mb-1">Всего проектов</p>
-              <p className="text-2xl font-extrabold text-text-primary">{projects?.length}</p>
+              <p className="text-2xl font-extrabold text-text-primary">
+                {projects?.length}
+              </p>
             </div>
             <div className="p-5 bg-bg-card border border-border rounded-2xl">
               <div className="flex items-center gap-1 text-xs text-text-muted mb-1">
                 <TrendingUp size={11} className="text-success" />
                 Активных
               </div>
-              <p className="text-2xl font-extrabold text-success">{activeCount}</p>
+              <p className="text-2xl font-extrabold text-success">
+                {activeCount}
+              </p>
             </div>
             <div className="p-5 bg-bg-card border border-border rounded-2xl">
               <div className="flex items-center gap-1 text-xs text-text-muted mb-1">
                 <Coins size={11} className="text-accent-cyan" />
                 Собрано
               </div>
-              <p className="text-2xl font-extrabold text-accent-cyan">{formatCurrency(totalFunding)}</p>
+              <p className="text-2xl font-extrabold text-accent-cyan">
+                {formatCurrency(totalFunding)}
+              </p>
             </div>
             <div className="p-5 bg-bg-card border border-border rounded-2xl">
               <div className="flex items-center gap-1 text-xs text-text-muted mb-1">
                 <Clock size={11} className="text-accent-purple" />
                 Профинансировано
               </div>
-              <p className="text-2xl font-extrabold text-accent-purple">{fundedCount}</p>
+              <p className="text-2xl font-extrabold text-accent-purple">
+                {fundedCount}
+              </p>
             </div>
           </motion.div>
         )}
@@ -100,9 +112,12 @@ export function MyProjectsPage() {
                 <Music2 className="w-9 h-9 text-accent-purple opacity-70" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-text-primary">У вас пока нет проектов</h3>
+                <h3 className="text-xl font-bold text-text-primary">
+                  У вас пока нет проектов
+                </h3>
                 <p className="text-text-secondary mt-2 max-w-sm mx-auto">
-                  Создайте краудфандинг-кампанию, привлеките инвесторов и запишите свой альбом
+                  Создайте краудфандинг-кампанию, привлеките инвесторов и
+                  запишите свой альбом
                 </p>
               </div>
               <button
@@ -162,7 +177,11 @@ export function MyProjectsPage() {
                         showLabel={false}
                       />
                       <p className="text-xs text-text-muted">
-                        {calcFundingPercent(project.currentFunding, project.fundingGoal)}% из 100%
+                        {calcFundingPercent(
+                          project.currentFunding,
+                          project.fundingGoal,
+                        )}
+                        % из 100%
                       </p>
                     </div>
 

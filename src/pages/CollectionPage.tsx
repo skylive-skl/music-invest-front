@@ -1,24 +1,31 @@
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Heart, Disc3, Music } from 'lucide-react';
-import { albumsApi } from '../lib/api/albums.api';
-import { AlbumCard } from '../components/molecules/AlbumCard';
-import { Spinner } from '../components/atoms/Spinner';
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Heart, Disc3, Music } from "lucide-react";
+import { albumsApi } from "../lib/api/albums.api";
+import { AlbumCard } from "../components/molecules/AlbumCard";
+import { Spinner } from "../components/atoms/Spinner";
 
 export function CollectionPage() {
   const { data: albums, isLoading } = useQuery({
-    queryKey: ['albums'],
+    queryKey: ["albums"],
     queryFn: albumsApi.getAll,
   });
 
   return (
-    <div className="min-h-screen px-8 py-8 space-y-8">
-      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
+    <div className="min-h-screen px-4 py-4 md:px-8 md:py-8 space-y-6 md:space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <div className="flex items-center gap-2 mb-1">
           <Heart className="w-6 h-6 text-accent-purple" />
-          <h1 className="text-3xl font-bold text-text-primary">Моя коллекция</h1>
+          <h1 className="text-3xl font-bold text-text-primary">
+            Моя коллекция
+          </h1>
         </div>
-        <p className="text-text-secondary">Все доступные альбомы на платформе</p>
+        <p className="text-text-secondary">
+          Все доступные альбомы на платформе
+        </p>
       </motion.div>
 
       {isLoading ? (
