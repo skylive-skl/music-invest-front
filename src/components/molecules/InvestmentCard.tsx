@@ -82,7 +82,7 @@ export function InvestmentCard({ investment, index = 0 }: InvestmentCardProps) {
             <span>
               Доля:{" "}
               <span className="text-accent-purple">
-                {investment.sharePercent?.toFixed(2)}%
+                {investment?.sharePercent}%
               </span>
             </span>
           </div>
