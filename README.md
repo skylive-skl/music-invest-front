@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# Music Invest Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Фронтенд платформы для музыкального краудинвестинга на React, TypeScript и Vite.
 
-Currently, two official plugins are available:
+## Локальная разработка
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Требования:
 
-## React Compiler
+- Node.js 20+
+- npm 10+
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Установка и запуск:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm ci
+cp .env.example .env
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Переменные окружения:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `VITE_API_BASE_URL` — базовый URL backend API
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Пример:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
 ```
+
+## Production Docker
+
+Для production используется multi-stage сборка:
+
+1. На стадии `builder` приложение собирается через `npm run build`.
+2. На стадии `runner` Nginx раздает содержимое `dist`.
+3. Для клиентского роутинга включен SPA fallback через `try_files ... /index.html`.
+
+### Сборка образа
+
+```bash
+docker build \
+  --build-arg VITE_API_BASE_URL=http://localhost:3000 \
+  -t music-invest-front:latest \
+  .
+```
+
+Важно: `VITE_API_BASE_URL` встраивается в приложение на этапе сборки образа. Если backend URL изменится, образ нужно пересобрать.
+
+### Сборка и запуск через Docker Compose (.env)
+
+Файл `docker-compose.yml` берет `VITE_API_BASE_URL` из `.env` и автоматически передает его в `build.args`.
+
+```bash
+docker compose up -d --build
+```
+
+Проверить запущенный сервис:
+
+```bash
+docker compose ps
+docker compose logs -f frontend
+```
+
+Остановить и удалить контейнер:
+
+```bash
+docker compose down
+```
+
+### Запуск контейнера
+
+```bash
+docker run --rm -d -p 80:80 music-invest-front:latest
+```
+
+После запуска приложение будет доступно на `http://localhost`.
+
+### Добавленные файлы
+
+- `Dockerfile` — multi-stage production build
+- `nginx.conf` — конфиг Nginx со SPA fallback
+- `.dockerignore` — уменьшает build context и ускоряет сборку
+- `docker-compose.yml` — запуск с подстановкой `VITE_API_BASE_URL` из `.env`
+
+## Почему не vite preview
+
+`vite preview` подходит для проверки собранного приложения, но не является production web server. Для продового запуска здесь используется Nginx, потому что он лучше подходит для раздачи статических файлов и корректно обрабатывает прямые переходы по SPA-маршрутам.
