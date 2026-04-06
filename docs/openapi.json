@@ -1,0 +1,859 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UserController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all users",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/me": {
+      "get": {
+        "operationId": "UserController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current user profile",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/wallet": {
+      "get": {
+        "operationId": "UserController_getWallet",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current user wallet balance",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Register a new user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Login user and get access token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/projects": {
+      "post": {
+        "operationId": "ProjectController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new project",
+        "tags": [
+          "Projects"
+        ]
+      },
+      "get": {
+        "operationId": "ProjectController_findAll",
+        "parameters": [
+          {
+            "name": "artistId",
+            "required": false,
+            "in": "query",
+            "description": "Filter projects by artist ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all projects",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/projects/{id}": {
+      "get": {
+        "operationId": "ProjectController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get project by ID",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/projects/{id}/cover": {
+      "post": {
+        "operationId": "ProjectController_uploadCover",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Upload project cover image",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/projects/{id}/media": {
+      "post": {
+        "operationId": "ProjectController_uploadMedia",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Upload project media files",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/investments": {
+      "post": {
+        "operationId": "InvestmentController_invest",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvestmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Invest in a project",
+        "tags": [
+          "Investments"
+        ]
+      }
+    },
+    "/investments/my-investments": {
+      "get": {
+        "operationId": "InvestmentController_getMyInvestments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current user investments",
+        "tags": [
+          "Investments"
+        ]
+      }
+    },
+    "/payouts/revenue": {
+      "post": {
+        "operationId": "PayoutController_submitRevenue",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRevenueReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit revenue report for a project",
+        "tags": [
+          "Payouts"
+        ]
+      }
+    },
+    "/payouts/history": {
+      "get": {
+        "operationId": "PayoutController_getPayoutHistory",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get payout history for current user",
+        "tags": [
+          "Payouts"
+        ]
+      }
+    },
+    "/albums": {
+      "post": {
+        "operationId": "AlbumController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlbumDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new album",
+        "tags": [
+          "Albums"
+        ]
+      },
+      "get": {
+        "operationId": "AlbumController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all albums",
+        "tags": [
+          "Albums"
+        ]
+      }
+    },
+    "/albums/{id}": {
+      "get": {
+        "operationId": "AlbumController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get album by ID",
+        "tags": [
+          "Albums"
+        ]
+      }
+    },
+    "/albums/{id}/cover": {
+      "post": {
+        "operationId": "AlbumController_uploadCover",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Upload album cover image",
+        "tags": [
+          "Albums"
+        ]
+      }
+    },
+    "/tracks": {
+      "post": {
+        "operationId": "TrackController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrackDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new track metadata",
+        "tags": [
+          "Tracks"
+        ]
+      },
+      "get": {
+        "operationId": "TrackController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all tracks",
+        "tags": [
+          "Tracks"
+        ]
+      }
+    },
+    "/tracks/{id}": {
+      "get": {
+        "operationId": "TrackController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get track by ID",
+        "tags": [
+          "Tracks"
+        ]
+      }
+    },
+    "/tracks/{id}/audio": {
+      "post": {
+        "operationId": "TrackController_uploadAudio",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Upload track audio file",
+        "tags": [
+          "Tracks"
+        ]
+      }
+    },
+    "/search": {
+      "get": {
+        "operationId": "SearchController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "description": "Search query",
+            "schema": {
+              "example": "nirvana",
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "description": "Entity types to search. Defaults to all types.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "track",
+                  "album",
+                  "artist",
+                  "project"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Global search across tracks, albums, artists and projects",
+        "tags": [
+          "Search"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Music Invest API",
+    "description": "The API for music investment and crowdfunding platform",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com",
+            "description": "User email address"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "User password",
+            "minLength": 6
+          },
+          "role": {
+            "type": "string",
+            "example": "INVESTOR",
+            "enum": [
+              "USER",
+              "ARTIST",
+              "ADMIN"
+            ],
+            "description": "User role. Defaults to INVESTOR."
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user@example.com",
+            "description": "User email address"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "User password",
+            "minLength": 6
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "CreateProjectDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "My Awesome Album",
+            "description": "The title of the project"
+          },
+          "description": {
+            "type": "string",
+            "example": "This album will blow your mind",
+            "description": "Detailed project description"
+          },
+          "fundingGoal": {
+            "type": "number",
+            "example": 10000,
+            "description": "Funding goal in USD"
+          },
+          "revenueSharePercent": {
+            "type": "number",
+            "example": 50,
+            "description": "Percentage of revenue to share with investors",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "durationMonths": {
+            "type": "number",
+            "example": 12,
+            "description": "Duration of the project in months",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "fundingGoal",
+          "revenueSharePercent",
+          "durationMonths"
+        ]
+      },
+      "CreateInvestmentDto": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "example": "uuid-project-id",
+            "description": "The ID of the project to invest in"
+          },
+          "amount": {
+            "type": "number",
+            "example": 100,
+            "description": "Investment amount in USD",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "projectId",
+          "amount"
+        ]
+      },
+      "CreateRevenueReportDto": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "example": "uuid-project-id",
+            "description": "The related project ID"
+          },
+          "amount": {
+            "type": "number",
+            "example": 5000,
+            "description": "Revenue amount generated in the period"
+          },
+          "periodStart": {
+            "type": "string",
+            "example": "2023-01-01T00:00:00Z",
+            "description": "Period start date"
+          },
+          "periodEnd": {
+            "type": "string",
+            "example": "2023-01-31T23:59:59Z",
+            "description": "Period end date"
+          }
+        },
+        "required": [
+          "projectId",
+          "amount",
+          "periodStart",
+          "periodEnd"
+        ]
+      },
+      "CreateAlbumDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the album",
+            "example": "Nevermind"
+          },
+          "releaseDate": {
+            "type": "string",
+            "description": "Release date of the album (ISO 8601)",
+            "example": "2025-06-01"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "CreateTrackDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the track",
+            "example": "Smells Like Teen Spirit"
+          },
+          "albumId": {
+            "type": "string",
+            "description": "Album ID representing the relation to the album",
+            "example": "uuid-string"
+          }
+        },
+        "required": [
+          "title",
+          "albumId"
+        ]
+      }
+    }
+  }
+}
