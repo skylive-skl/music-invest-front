@@ -110,7 +110,10 @@ export function CreateProjectModal({
 
       if (mediaFiles.length > 0) {
         try {
-          project = await projectsApi.uploadMedia(createdProject.id, mediaFiles);
+          project = await projectsApi.uploadMedia(
+            createdProject.id,
+            mediaFiles,
+          );
         } catch (err) {
           warnings.push(
             `Не удалось загрузить медиафайлы: ${getErrorMessage(err, "сервер вернул ошибку")}`,
@@ -369,10 +372,13 @@ export function CreateProjectModal({
                         <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-dashed border-border bg-bg-elevated px-4 py-3 text-sm text-text-secondary transition-colors hover:border-accent-purple/50 hover:text-text-primary">
                           <div>
                             <p className="font-medium text-text-primary">
-                              {coverFile ? coverFile.name : "Выберите изображение"}
+                              {coverFile
+                                ? coverFile.name
+                                : "Выберите изображение"}
                             </p>
                             <p className="text-xs text-text-muted mt-1">
-                              JPG, PNG, WEBP. Файл загрузится сразу после создания проекта.
+                              JPG, PNG, WEBP. Файл загрузится сразу после
+                              создания проекта.
                             </p>
                           </div>
                           <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-semibold text-text-primary">
@@ -418,7 +424,8 @@ export function CreateProjectModal({
                               Добавьте аудио или видеофайлы
                             </p>
                             <p className="text-xs text-text-muted mt-1">
-                              Можно выбрать несколько файлов. Они отправятся после создания проекта.
+                              Можно выбрать несколько файлов. Они отправятся
+                              после создания проекта.
                             </p>
                           </div>
                           <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-semibold text-text-primary">
