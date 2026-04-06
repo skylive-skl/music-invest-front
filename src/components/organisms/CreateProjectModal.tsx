@@ -8,10 +8,14 @@ import {
   FileText,
   DollarSign,
   Clock,
+  ImagePlus,
+  Music4,
+  Upload,
+  Trash2,
 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { projectsApi } from "../../lib/api/projects.api";
-import type { CreateProjectDto } from "../../types/project.types";
+import type { CreateProjectDto, Project } from "../../types/project.types";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -19,6 +23,11 @@ interface CreateProjectModalProps {
 }
 
 type Step = "form" | "success" | "error";
+
+interface CreateProjectResult {
+  project: Project;
+  warnings: string[];
+}
 
 const initialForm: CreateProjectDto = {
   title: "",
@@ -28,6 +37,36 @@ const initialForm: CreateProjectDto = {
   durationMonths: 12,
 };
 
+const formatBytes = (bytes: number) => {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`;
+  }
+
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+const getErrorMessage = (err: unknown, fallback: string) => {
+  if (typeof err === "object" && err !== null) {
+    const response = (err as { response?: { data?: { message?: unknown } } })
+      .response;
+    const message = response?.data?.message;
+
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+
+    if (Array.isArray(message) && message.length > 0) {
+      return message.join(", ");
+    }
+  }
+
+  return fallback;
+};
+
 export function CreateProjectModal({
   isOpen,
   onClose,
@@ -35,6 +74,9 @@ export function CreateProjectModal({
   const [form, setForm] = useState<CreateProjectDto>(initialForm);
   const [step, setStep] = useState<Step>("form");
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
   const queryClient = useQueryClient();
 
   const update = <K extends keyof CreateProjectDto>(
@@ -50,25 +92,96 @@ export function CreateProjectModal({
     form.revenueSharePercent <= 100 &&
     form.durationMonths >= 1;
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: () => projectsApi.create(form),
-    onSuccess: () => {
+  const { mutate, isPending } = useMutation<CreateProjectResult, unknown>({
+    mutationFn: async () => {
+      const createdProject = await projectsApi.create(form);
+      const warnings: string[] = [];
+      let project = createdProject;
+
+      if (coverFile) {
+        try {
+          project = await projectsApi.uploadCover(createdProject.id, coverFile);
+        } catch (err) {
+          warnings.push(
+            `Не удалось загрузить обложку: ${getErrorMessage(err, "сервер вернул ошибку")}`,
+          );
+        }
+      }
+
+      if (mediaFiles.length > 0) {
+        try {
+          project = await projectsApi.uploadMedia(createdProject.id, mediaFiles);
+        } catch (err) {
+          warnings.push(
+            `Не удалось загрузить медиафайлы: ${getErrorMessage(err, "сервер вернул ошибку")}`,
+          );
+        }
+      }
+
+      return { project, warnings };
+    },
+    onSuccess: ({ warnings }) => {
       queryClient.invalidateQueries({ queryKey: ["my-projects"] });
       queryClient.invalidateQueries({ queryKey: ["projects"] });
+
+      if (warnings.length > 0) {
+        setSuccessMsg(
+          `Проект «${form.title}» создан, но часть файлов не загрузилась. ${warnings.join(" ")}`,
+        );
+      } else {
+        setSuccessMsg(
+          `Проект «${form.title}» успешно создан${coverFile || mediaFiles.length > 0 ? " и файлы загружены" : ""}.`,
+        );
+      }
+
       setStep("success");
     },
-    onError: (err: any) => {
-      setErrorMsg(
-        err?.response?.data?.message ?? "Ошибка при создании проекта",
-      );
+    onError: (err) => {
+      setErrorMsg(getErrorMessage(err, "Ошибка при создании проекта"));
+      setSuccessMsg("");
       setStep("error");
     },
   });
+
+  const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+    setCoverFile(file);
+    event.target.value = "";
+  };
+
+  const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+
+    if (files.length === 0) {
+      return;
+    }
+
+    setMediaFiles((prev) => {
+      const existingKeys = new Set(
+        prev.map((file) => `${file.name}-${file.size}-${file.lastModified}`),
+      );
+      const nextFiles = files.filter((file) => {
+        const key = `${file.name}-${file.size}-${file.lastModified}`;
+        return !existingKeys.has(key);
+      });
+
+      return [...prev, ...nextFiles];
+    });
+
+    event.target.value = "";
+  };
+
+  const removeMediaFile = (indexToRemove: number) => {
+    setMediaFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
 
   const handleClose = () => {
     setForm(initialForm);
     setStep("form");
     setErrorMsg("");
+    setSuccessMsg("");
+    setCoverFile(null);
+    setMediaFiles([]);
     onClose();
   };
 
@@ -247,6 +360,108 @@ export function CreateProjectModal({
                       </div>
                     </div>
 
+                    <div className="space-y-4">
+                      <div>
+                        <label className="flex items-center gap-2 text-sm font-medium text-text-secondary mb-1.5">
+                          <ImagePlus size={14} />
+                          Обложка проекта
+                        </label>
+                        <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-dashed border-border bg-bg-elevated px-4 py-3 text-sm text-text-secondary transition-colors hover:border-accent-purple/50 hover:text-text-primary">
+                          <div>
+                            <p className="font-medium text-text-primary">
+                              {coverFile ? coverFile.name : "Выберите изображение"}
+                            </p>
+                            <p className="text-xs text-text-muted mt-1">
+                              JPG, PNG, WEBP. Файл загрузится сразу после создания проекта.
+                            </p>
+                          </div>
+                          <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-semibold text-text-primary">
+                            <Upload size={12} />
+                            Загрузить
+                          </span>
+                          <input
+                            type="file"
+                            accept="image/png,image/jpeg,image/webp"
+                            onChange={handleCoverChange}
+                            className="hidden"
+                          />
+                        </label>
+                        {coverFile && (
+                          <div className="mt-2 flex items-center justify-between rounded-2xl border border-border bg-bg-card px-4 py-3 text-sm">
+                            <div>
+                              <p className="font-medium text-text-primary">
+                                {coverFile.name}
+                              </p>
+                              <p className="text-xs text-text-muted mt-1">
+                                {formatBytes(coverFile.size)}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setCoverFile(null)}
+                              className="rounded-xl p-2 text-text-muted transition-colors hover:bg-bg-elevated hover:text-danger"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="flex items-center gap-2 text-sm font-medium text-text-secondary mb-1.5">
+                          <Music4 size={14} />
+                          Медиафайлы проекта
+                        </label>
+                        <label className="flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-dashed border-border bg-bg-elevated px-4 py-3 text-sm text-text-secondary transition-colors hover:border-accent-purple/50 hover:text-text-primary">
+                          <div>
+                            <p className="font-medium text-text-primary">
+                              Добавьте аудио или видеофайлы
+                            </p>
+                            <p className="text-xs text-text-muted mt-1">
+                              Можно выбрать несколько файлов. Они отправятся после создания проекта.
+                            </p>
+                          </div>
+                          <span className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-semibold text-text-primary">
+                            <Upload size={12} />
+                            Добавить
+                          </span>
+                          <input
+                            type="file"
+                            accept="audio/*,video/*"
+                            multiple
+                            onChange={handleMediaChange}
+                            className="hidden"
+                          />
+                        </label>
+                        {mediaFiles.length > 0 && (
+                          <div className="mt-2 space-y-2">
+                            {mediaFiles.map((file, index) => (
+                              <div
+                                key={`${file.name}-${file.size}-${file.lastModified}`}
+                                className="flex items-center justify-between rounded-2xl border border-border bg-bg-card px-4 py-3 text-sm"
+                              >
+                                <div className="min-w-0">
+                                  <p className="truncate font-medium text-text-primary">
+                                    {file.name}
+                                  </p>
+                                  <p className="text-xs text-text-muted mt-1">
+                                    {formatBytes(file.size)}
+                                  </p>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => removeMediaFile(index)}
+                                  className="rounded-xl p-2 text-text-muted transition-colors hover:bg-bg-elevated hover:text-danger"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Preview card */}
                     {isValid && (
                       <motion.div
@@ -292,8 +507,7 @@ export function CreateProjectModal({
                         Проект создан!
                       </h3>
                       <p className="text-sm text-text-secondary mt-1">
-                        «{form.title}» успешно добавлен. Теперь вы можете
-                        загрузить обложку.
+                        {successMsg}
                       </p>
                     </div>
                   </div>

@@ -33,9 +33,11 @@ export const projectsApi = {
     return data;
   },
 
-  uploadMedia: async (id: string, file: File): Promise<Project> => {
+  uploadMedia: async (id: string, files: File[]): Promise<Project> => {
     const form = new FormData();
-    form.append('file', file);
+    files.forEach((file) => {
+      form.append('files', file);
+    });
     const { data } = await apiClient.post<Project>(`/projects/${id}/media`, form, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
