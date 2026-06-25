@@ -9,8 +9,11 @@ import {
   Music2,
   Wallet,
   Clapperboard,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
+import { useThemeStore } from "../../store/theme.store";
 import { Avatar } from "../atoms/Avatar";
 import { cn } from "../../lib/utils";
 
@@ -28,6 +31,7 @@ const artistNavItems = [
 
 export function Sidebar() {
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { theme, toggleTheme } = useThemeStore();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -169,6 +173,33 @@ export function Sidebar() {
           </NavLink>
         )}
       </nav>
+
+      {/* Theme Switcher */}
+      <div className="px-6 py-4 border-t border-border flex items-center justify-between">
+        <div className="flex items-center gap-2.5 text-text-secondary select-none">
+          {theme === "dark" ? (
+            <Moon size={18} className="text-accent-purple-light" />
+          ) : (
+            <Sun size={18} className="text-accent-purple" />
+          )}
+          <span className="text-sm font-medium">Светлая тема</span>
+        </div>
+        <button
+          onClick={toggleTheme}
+          className={cn(
+            "w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out relative flex items-center focus:outline-none focus:ring-2 focus:ring-accent-purple/30",
+            theme === "light" ? "bg-accent-purple" : "bg-bg-elevated border border-border"
+          )}
+          aria-label="Переключить тему"
+        >
+          <span
+            className={cn(
+              "w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out absolute left-0.5",
+              theme === "light" ? "translate-x-4" : "translate-x-0"
+            )}
+          />
+        </button>
+      </div>
 
       {/* User footer */}
       {isAuthenticated && user && (

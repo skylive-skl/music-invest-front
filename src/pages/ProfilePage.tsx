@@ -8,12 +8,17 @@ import {
   ChevronRight,
   Mail,
   Shield,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useAuthStore } from "../store/auth.store";
+import { useThemeStore } from "../store/theme.store";
 import { Avatar } from "../components/atoms/Avatar";
+import { cn } from "../lib/utils";
 
 export function ProfilePage() {
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { theme, toggleTheme } = useThemeStore();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -81,13 +86,13 @@ export function ProfilePage() {
         </div>
       </div>
 
-      {/* Quick links */}
+      {/* Quick links & Theme toggle */}
       <div className="card divide-y divide-border mb-6">
         {menuItems.map(({ to, icon: Icon, label }) => (
           <Link
             key={to}
             to={to}
-            className="flex items-center gap-3 px-4 py-3.5 hover:bg-bg-elevated transition-colors first:rounded-t-xl last:rounded-b-xl"
+            className="flex items-center gap-3 px-4 py-3.5 hover:bg-bg-elevated transition-colors first:rounded-t-xl"
           >
             <span className="w-8 h-8 rounded-lg bg-accent-purple/10 flex items-center justify-center">
               <Icon size={16} className="text-accent-purple" />
@@ -98,6 +103,38 @@ export function ProfilePage() {
             <ChevronRight size={16} className="text-text-muted" />
           </Link>
         ))}
+
+        {/* Theme toggle switch in profile list */}
+        <div
+          onClick={toggleTheme}
+          className="flex items-center justify-between px-4 py-3.5 hover:bg-bg-elevated transition-colors last:rounded-b-xl cursor-pointer select-none"
+        >
+          <div className="flex items-center gap-3">
+            <span className="w-8 h-8 rounded-lg bg-accent-purple/10 flex items-center justify-center">
+              {theme === "dark" ? (
+                <Moon size={16} className="text-accent-purple" />
+              ) : (
+                <Sun size={16} className="text-accent-purple" />
+              )}
+            </span>
+            <span className="text-sm font-medium text-text-primary">
+              Светлая тема
+            </span>
+          </div>
+          <div
+            className={cn(
+              "w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out relative flex items-center",
+              theme === "light" ? "bg-accent-purple" : "bg-bg-hover border border-border"
+            )}
+          >
+            <span
+              className={cn(
+                "w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out absolute left-0.5",
+                theme === "light" ? "translate-x-4" : "translate-x-0"
+              )}
+            />
+          </div>
+        </div>
       </div>
 
       {/* Logout */}

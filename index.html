@@ -6,6 +6,24 @@
     <title>MusicInvest — Инвестируй в музыку будущего</title>
     <meta name="description" content="Музыкальный стриминговый сервис с краудфандингом. Поддерживай артистов, получай долю от выручки." />
     <meta name="theme-color" content="#0a0a0f" />
+    <script>
+      (function() {
+        try {
+          const theme = localStorage.getItem("theme");
+          const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const isDark = theme === "dark" || (!theme && systemPrefersDark);
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+            document.documentElement.style.colorScheme = "dark";
+          } else {
+            document.documentElement.classList.remove("dark");
+            document.documentElement.style.colorScheme = "light";
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) metaTheme.setAttribute("content", "#f8f9fa");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
