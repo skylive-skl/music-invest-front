@@ -28,13 +28,12 @@ const updateThemeDOM = (theme: Theme) => {
 
 export const useThemeStore = create<ThemeState>((set) => {
   const getInitialTheme = (): Theme => {
-    if (typeof window === "undefined") return "dark";
+    if (typeof window === "undefined") return "light";
     const savedTheme = localStorage.getItem("theme") as Theme;
     if (savedTheme === "light" || savedTheme === "dark") {
       return savedTheme;
     }
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    return systemPrefersDark ? "dark" : "light";
+    return "light";
   };
 
   const initialTheme = getInitialTheme();

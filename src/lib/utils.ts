@@ -20,8 +20,8 @@ export function formatAmount(amount: number): string {
   return amount.toLocaleString();
 }
 
-/** Format currency in ₸ (Tenge) or $ */
-export function formatCurrency(amount: number, currency = '₸'): string {
+/** Format currency in сум (Som) or $ */
+export function formatCurrency(amount: number, currency = 'сум'): string {
   return `${amount.toLocaleString('ru-RU')} ${currency}`;
 }
 

@@ -152,7 +152,7 @@ export function InvestModal({
                               className="w-full px-4 py-3 pr-12 bg-bg-elevated border border-border rounded-2xl text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-purple focus:ring-1 focus:ring-accent-purple/30 transition-colors"
                             />
                             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted font-medium">
-                              ₸
+                              сум
                             </span>
                           </div>
 
@@ -161,7 +161,7 @@ export function InvestModal({
                             <div className="mt-1.5 text-xs">
                               {parsedAmount < 100 && (
                                 <p className="text-danger">
-                                  Минимальная сумма — 100 ₸
+                                  Минимальная сумма — 100 сум
                                 </p>
                               )}
                               {parsedAmount > walletBalance && (
@@ -205,7 +205,7 @@ export function InvestModal({
                               {sharePercent}%
                             </p>
                             <p className="text-xs text-text-muted mt-1">
-                              = {parsedAmount.toLocaleString("ru-RU")} ₸ /{" "}
+                              = {parsedAmount.toLocaleString("ru-RU")} сум /{" "}
                               {formatCurrency(project.fundingGoal)} цель
                             </p>
                           </div>

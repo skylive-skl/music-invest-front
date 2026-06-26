@@ -16,7 +16,7 @@ export function FundingProgress({ current, goal, className, showLabel = true }: 
       {showLabel && (
         <div className="flex justify-between text-xs text-text-secondary">
           <span>{percent}% собрано</span>
-          <span>{goal.toLocaleString('ru-RU')} ₸</span>
+          <span>{goal.toLocaleString('ru-RU')} сум</span>
         </div>
       )}
       <div className="h-1.5 w-full bg-bg-elevated rounded-full overflow-hidden">

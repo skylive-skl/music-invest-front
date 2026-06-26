@@ -275,7 +275,7 @@ export function CreateProjectModal({
                     <div>
                       <label className="flex items-center gap-2 text-sm font-medium text-text-secondary mb-1.5">
                         <DollarSign size={14} />
-                        Цель финансирования (₸)
+                        Цель финансирования (сум)
                       </label>
                       <div className="relative">
                         <input
@@ -289,12 +289,12 @@ export function CreateProjectModal({
                           className="w-full px-4 py-3 pr-10 bg-bg-elevated border border-border rounded-2xl text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-purple focus:ring-1 focus:ring-accent-purple/30 transition-colors"
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted font-medium">
-                          ₸
+                          сум
                         </span>
                       </div>
                       {form.fundingGoal > 0 && form.fundingGoal < 1000 && (
                         <p className="text-xs text-danger mt-1">
-                          Минимальная цель — 1 000 ₸
+                          Минимальная цель — 1 000 сум
                         </p>
                       )}
                       {/* Quick presets */}
@@ -482,7 +482,7 @@ export function CreateProjectModal({
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-text-secondary">Цель</span>
                           <span className="font-bold text-text-primary">
-                            {form.fundingGoal.toLocaleString("ru-RU")} ₸
+                            {form.fundingGoal.toLocaleString("ru-RU")} сум
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-sm">
